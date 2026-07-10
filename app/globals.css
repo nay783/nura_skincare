@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+:root {
+  /* Core Theme Colors */
+  --background: #FAF9F6;      /* Warm White */
+  --foreground: #1C1C1C;      /* Near Black */
+  --card: #FFFFFF;            /* Pure White */
+  --card-foreground: #1C1C1C;
+  --primary: #1B3B2B;         /* Deep Forest Green */
+  --primary-foreground: #FAF9F6;
+  --secondary: #556B2F;       /* Muted Olive */
+  --secondary-foreground: #FAF9F6;
+  --accent: #D4AF37;          /* Warm Gold */
+  --accent-foreground: #1C1C1C;
+  --muted: #F0EDE6;           /* Warm Light Gray */
+  --muted-foreground: #707070;/* Neutral Gray */
+  --border: #E6E2D8;          /* Light warm border */
+  --input: #E6E2D8;
+  --ring: #1B3B2B;
+
+  /* Custom Animations and UI Constraints */
+  --radius-lg: 8px;
+  --radius-md: 6px;
+  --radius-sm: 4px;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-sans), system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-serif), Georgia, serif;
+
+  --radius-lg: 8px;
+  --radius-md: 6px;
+  --radius-sm: 4px;
+}
+
+/* Custom Base Styles */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Editorial Focus States */
+  input:focus, 
+  textarea:focus, 
+  select:focus,
+  button:focus-visible {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary);
+  }
+
+  /* Premium scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: var(--radius-sm);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--muted-foreground);
+  }
+
+  /* Dynamic micro-interactions selection */
+  ::selection {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+}
+
+/* Custom Utility Classes for Luxury Editorial Layouts */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .bg-glass {
+    background-color: rgba(250, 249, 246, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
