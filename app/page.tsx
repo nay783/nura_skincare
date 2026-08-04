@@ -57,6 +57,40 @@ const REDESIGNED_CATEGORIES = [
   { name: "Pele sensível", slug: "pele-sensivel", image: "/images/categories/pele-sensivel.jpg" }
 ];
 
+// Helper to get a stable, premium presentation image for the homepage showcase cards
+function getFeaturedDisplayImage(product: Product, index: number): string {
+  if (product.main_image_url && product.main_image_url.includes("supabase.co")) {
+    return product.main_image_url;
+  }
+  
+  const lowerName = product.name.toLowerCase();
+  if (lowerName.includes("hidrat") || lowerName.includes("hyalur") || lowerName.includes("gel") || lowerName.includes("creme")) {
+    return "/images/categories/hidratacao.jpg";
+  }
+  if (lowerName.includes("acne") || lowerName.includes("centella") || lowerName.includes("calm")) {
+    return "/images/categories/pele-sensivel.jpg";
+  }
+  if (lowerName.includes("manch") || lowerName.includes("vit") || lowerName.includes("bright")) {
+    return "/images/categories/manchas.jpg";
+  }
+  if (lowerName.includes("oleo") || lowerName.includes("sebo") || lowerName.includes("pore")) {
+    return "/images/categories/oleosidade.jpg";
+  }
+  if (lowerName.includes("idade") || lowerName.includes("anti") || lowerName.includes("retinol")) {
+    return "/images/categories/anti-idade.jpg";
+  }
+
+  const indexImages = [
+    "/images/categories/hidratacao.jpg",
+    "/images/categories/pele-sensivel.jpg",
+    "/images/categories/manchas.jpg",
+    "/images/categories/oleosidade.jpg",
+    "/images/categories/anti-idade.jpg",
+    "/images/categories/acne.jpg"
+  ];
+  return indexImages[index % indexImages.length];
+}
+
 export default async function Home() {
   const products = await getProducts();
   
@@ -66,25 +100,28 @@ export default async function Home() {
     return p.stock_quantity > 0 && !!img && img.trim() !== "";
   });
 
-  // Hero Section Collections & Alternative selection rotation list
-  const heroProducts = eligibleProducts.length > 0 ? eligibleProducts : getLocalFallbackProducts();
-
   // Asymmetric Favorites Selection (curated list)
-  const favLarge = eligibleProducts[0] || products[0];
-  const favSmall1 = eligibleProducts[1] || products[1];
-  const favSmall2 = eligibleProducts[2] || products[2];
+  const favLargeRaw = eligibleProducts[0] || products[0];
+  const favSmall1Raw = eligibleProducts[1] || products[1];
+  const favSmall2Raw = eligibleProducts[2] || products[2];
 
-  // New arrivals (first 4 items)
-  const newArrivals = products.slice(0, 4);
+  const favLarge = favLargeRaw ? { ...favLargeRaw, main_image_url: getFeaturedDisplayImage(favLargeRaw, 0) } : null;
+  const favSmall1 = favSmall1Raw ? { ...favSmall1Raw, main_image_url: getFeaturedDisplayImage(favSmall1Raw, 1) } : null;
+  const favSmall2 = favSmall2Raw ? { ...favSmall2Raw, main_image_url: getFeaturedDisplayImage(favSmall2Raw, 2) } : null;
+
+  // New arrivals (first 4 items with presentation-layer overrides)
+  const newArrivals = products.slice(0, 4).map((p, idx) => ({
+    ...p,
+    main_image_url: getFeaturedDisplayImage(p, idx + 3)
+  }));
 
   const whatsappAdviceUrl = "https://wa.me/258840000000?text=Ol%C3%A1%20Nura%2C%20gostaria%20de%20ajuda%20para%20escolher%20a%20minha%20rotina%20de%20skincare.";
 
   return (
     <div className="flex flex-col w-full font-sans bg-[#F7F3EC]">
       
-      {/* 1. Sleek Two-Column Hero with Featured Product Selector */}
+      {/* 1. Sleek Two-Column Hero with Curated Campaign Image */}
       <HeroSection 
-        featuredProducts={heroProducts} 
         whatsappAdviceUrl={whatsappAdviceUrl} 
       />
 
@@ -479,7 +516,7 @@ export default async function Home() {
           <div className="flex flex-col items-center p-2 space-y-2">
             <ShieldCheck className="h-6 w-6 stroke-[1.5] text-[#C49A5A]" />
             <h4 className="text-xs font-bold uppercase tracking-wider text-[#173E32]">Curadoria autêntica</h4>
-            <p className="text-[10px] text-muted-foreground font-sans">100% marcas homologadas</p>
+            <p className="text-[10px] text-muted-foreground font-sans">100% produtos autênticos</p>
           </div>
           <div className="flex flex-col items-center p-2 space-y-2">
             <Truck className="h-6 w-6 stroke-[1.5] text-[#C49A5A]" />

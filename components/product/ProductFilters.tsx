@@ -95,41 +95,8 @@ export function ProductFilters({
 
   const filtersForm = (
     <div className="space-y-6 font-sans">
-      {/* Brand Filter */}
-      <div className="space-y-3">
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-primary">Marcas</h4>
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => updateFilters({ brand: null })}
-            className={`px-3 py-1.5 text-xs rounded-sm border transition-all cursor-pointer ${
-              selectedBrands.length === 0
-                ? "bg-primary text-white border-primary"
-                : "bg-transparent text-primary border-border hover:border-primary/50"
-            }`}
-          >
-            Todas
-          </button>
-          {availableBrands.map((brand) => {
-            const isActive = selectedBrands.includes(brand.name);
-            return (
-              <button
-                key={brand.name}
-                onClick={() => handleBrandToggle(brand.name)}
-                className={`px-3 py-1.5 text-xs rounded-sm border transition-all cursor-pointer ${
-                  isActive
-                    ? "bg-primary text-white border-primary"
-                    : "bg-transparent text-primary border-border hover:border-primary/50"
-                }`}
-              >
-                {brand.name} <span className={`text-[10px] ml-0.5 ${isActive ? "text-white/80" : "text-muted-foreground"}`}>({brand.count})</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
       {/* Goal Filter */}
-      <div className="space-y-3 border-t border-border pt-4">
+      <div className="space-y-3">
         <h4 className="text-xs font-semibold uppercase tracking-wider text-primary">Objectivo da Pele</h4>
         <div className="flex flex-wrap gap-2">
           <button
@@ -143,18 +110,18 @@ export function ProductFilters({
             Todos
           </button>
           {availableGoals.map((goal) => {
-            const isActive = selectedGoals.includes(goal.slug);
+            const isActive = selectedGoals.includes(goal.name);
             return (
               <button
-                key={goal.slug}
-                onClick={() => handleGoalToggle(goal.slug)}
+                key={goal.name}
+                onClick={() => handleGoalToggle(goal.name)}
                 className={`px-3 py-1.5 text-xs rounded-sm border transition-all cursor-pointer ${
                   isActive
                     ? "bg-primary text-white border-primary"
                     : "bg-transparent text-primary border-border hover:border-primary/50"
                 }`}
               >
-                {goal.name} <span className={`text-[10px] ml-0.5 ${isActive ? "text-white/80" : "text-muted-foreground"}`}>({goal.count})</span>
+                {goal.name} <span className={`text-[10px] ml-0.5 ${isActive ? "text-white/80" : "text-muted-foreground"}`}>{goal.count > 0 ? `(${goal.count})` : ""}</span>
               </button>
             );
           })}
@@ -162,7 +129,7 @@ export function ProductFilters({
       </div>
 
       {/* Clear Filters CTA */}
-      {(currentSearch || currentBrand || currentGoal) && (
+      {(currentSearch || currentGoal) && (
         <Button
           onClick={handleClearFilters}
           variant="outline"
@@ -183,7 +150,7 @@ export function ProductFilters({
           <Input
             value={searchVal}
             onChange={(e) => setSearchVal(e.target.value)}
-            placeholder="Pesquisar produtos, marcas ou objectivos..."
+            placeholder="Pesquisar produtos ou objectivos..."
             className="pr-10 !h-10 border border-border focus:ring-primary focus:border-primary"
           />
           <button

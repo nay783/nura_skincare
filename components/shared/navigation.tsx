@@ -52,12 +52,6 @@ export function Header() {
               Objectivos da Pele
             </Link>
             <Link
-              href="/products?brand=true"
-              className="relative py-1 text-xs font-bold uppercase tracking-widest text-primary hover:text-accent transition-all after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 after:bg-accent after:transition-all hover:after:w-full"
-            >
-              Marcas
-            </Link>
-            <Link
               href="/blog"
               className="relative py-1 text-xs font-bold uppercase tracking-widest text-primary hover:text-accent transition-all after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 after:bg-accent after:transition-all hover:after:w-full"
             >
@@ -160,13 +154,7 @@ export function Header() {
             >
               Objectivos da Pele
             </Link>
-            <Link
-              href="/products?brand=true"
-              onClick={() => setIsOpen(false)}
-              className="block rounded-md px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-muted"
-            >
-              Marcas
-            </Link>
+
             <Link
               href="/blog"
               onClick={() => setIsOpen(false)}
