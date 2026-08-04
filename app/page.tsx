@@ -25,6 +25,7 @@ import { AddToCartButton } from "@/components/product/AddToCartButton";
 import { ProductImage } from "@/components/product/ProductImage";
 import { getLocalFallbackProducts } from "@/lib/supabase/fallback";
 import { formatCurrency } from "@/lib/utils";
+import { productPresentationImages } from "@/lib/product-presentation-images";
 
 export const revalidate = 60; // Revalidate every minute
 
@@ -67,12 +68,30 @@ export default async function Home() {
   });
 
   // Asymmetric Favorites Selection (curated list)
-  const favLarge = eligibleProducts[0] || products[0];
-  const favSmall1 = eligibleProducts[1] || products[1];
-  const favSmall2 = eligibleProducts[2] || products[2];
+  const favLargeRaw = eligibleProducts[0] || products[0];
+  const favSmall1Raw = eligibleProducts[1] || products[1];
+  const favSmall2Raw = eligibleProducts[2] || products[2];
 
-  // New arrivals (first 4 items)
-  const newArrivals = products.slice(0, 4);
+  const favLarge = favLargeRaw ? {
+    ...favLargeRaw,
+    main_image_url: productPresentationImages[favLargeRaw.slug] || favLargeRaw.main_image_url
+  } : null;
+
+  const favSmall1 = favSmall1Raw ? {
+    ...favSmall1Raw,
+    main_image_url: productPresentationImages[favSmall1Raw.slug] || favSmall1Raw.main_image_url
+  } : null;
+
+  const favSmall2 = favSmall2Raw ? {
+    ...favSmall2Raw,
+    main_image_url: productPresentationImages[favSmall2Raw.slug] || favSmall2Raw.main_image_url
+  } : null;
+
+  // New arrivals (first 4 items with presentation overrides)
+  const newArrivals = products.slice(0, 4).map(p => ({
+    ...p,
+    main_image_url: productPresentationImages[p.slug] || p.main_image_url
+  }));
 
   const whatsappAdviceUrl = "https://wa.me/258840000000?text=Ol%C3%A1%20Nura%2C%20gostaria%20de%20ajuda%20para%20escolher%20a%20minha%20rotina%20de%20skincare.";
 
