@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { ChevronLeft, Check, X, FileText, Calendar, DollarSign, Truck, Clipboard, User } from "lucide-react";
+import { ChevronLeft, Check, X, FileText, Calendar, DollarSign, Truck, Clipboard, User, ImageOff } from "lucide-react";
 import { Button } from "@/components/shared/button";
 import { formatCurrency } from "@/lib/utils";
+import { ProductImage } from "@/components/product/ProductImage";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "Pendente",
@@ -302,10 +303,20 @@ export default function AdminOrderDetailPage() {
                   <div key={idx} className="py-3.5 flex items-center justify-between text-xs">
                     <div className="flex items-center gap-3">
                       <div className="h-12 w-12 bg-neutral-100 border border-border rounded-sm overflow-hidden flex items-center justify-center shrink-0">
-                        {img ? (
-                          <img src={img} alt={item.products?.name} className="h-full w-full object-cover" />
+                        {item.products ? (
+                          <ProductImage
+                            product={{
+                              id: item.products.id,
+                              name: item.products.name,
+                              slug: item.products.slug || "",
+                              images: item.products.images || [],
+                            }}
+                            alt={item.products.name}
+                            fill
+                            sizes="48px"
+                          />
                         ) : (
-                          <FileText className="h-4 w-4 text-muted-foreground" />
+                          <ImageOff className="h-4 w-4 text-muted-foreground" />
                         )}
                       </div>
                       <div>

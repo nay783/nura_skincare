@@ -19,6 +19,7 @@ import type { Product } from "@/components/product/ProductCard";
 import RecommendationsWidget from "@/components/shared/RecommendationsWidget";
 import { HeroText } from "@/components/shared/HeroText";
 import { HeroFeaturedProduct } from "@/components/product/HeroFeaturedProduct";
+import { getLocalFallbackProducts } from "@/lib/supabase/fallback";
 
 export const revalidate = 60; // Revalidate every minute
 
@@ -31,13 +32,14 @@ async function getProducts() {
       .eq("status", "published")
       .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("Failed to fetch products:", error.message || error);
-      return [];
+    if (error || !data || data.length === 0) {
+      console.warn("Failed to fetch products or table empty, loading local fallbacks:", error);
+      return getLocalFallbackProducts();
     }
     return data as Product[];
-  } catch {
-    return [];
+  } catch (err) {
+    console.warn("Failed to connect to Supabase, loading local fallbacks:", err);
+    return getLocalFallbackProducts();
   }
 }
 

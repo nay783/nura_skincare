@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { ProductImage } from "@/components/product/ProductImage";
 import Link from "next/link";
 import { 
   Check, 
@@ -745,12 +745,17 @@ export default function CheckoutPage() {
               {cart.map((item) => (
                 <div key={item.id} className="py-3 flex items-center gap-3">
                   <div className="relative h-12 w-12 bg-muted rounded-sm overflow-hidden border border-border shrink-0">
-                    <Image
-                      src={item.image}
+                    <ProductImage
+                      product={{
+                        id: item.id,
+                        name: item.name,
+                        slug: item.slug,
+                        images: [item.image],
+                        main_image_url: item.image,
+                      }}
                       alt={item.name}
                       fill
                       sizes="48px"
-                      className="object-cover"
                     />
                   </div>
                   <div className="flex-1 min-w-0">

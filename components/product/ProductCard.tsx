@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { ProductImage } from "./ProductImage";
 import { MessageCircle, ShoppingBag, ImageOff } from "lucide-react";
 import { useCart } from "@/components/cart/cart-context";
 import { formatCurrency } from "@/lib/utils";
@@ -33,6 +33,9 @@ export interface Product {
   main_image_url?: string | null;
   external_images?: string[] | null;
   skin_goals?: string[] | null;
+  is_featured?: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 interface ProductCardProps {
@@ -83,47 +86,12 @@ export function ProductCard({ product }: ProductCardProps) {
     <div className="group relative flex flex-col bg-card border border-border overflow-hidden transition-all duration-300 hover:border-primary/30 max-w-sm rounded-[4px] h-full">
       {/* Product Image Link */}
       <Link href={`/products/${product.slug}`} className="relative block aspect-square w-full overflow-hidden bg-muted">
-        {showPlaceholder ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#FAF9F6] p-4 text-center">
-            <ImageOff className="h-6 w-6 stroke-[1.2] text-neutral-300 mb-2" />
-            <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium">Imagem indisponível</span>
-          </div>
-        ) : (
-          <>
-            {imageUrl && imageUrl.startsWith("http") ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={imageUrl}
-                alt={product.name}
-                className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                referrerPolicy="no-referrer"
-                onLoad={() => setLoading(false)}
-                onError={() => {
-                  setImageError(true);
-                  setLoading(false);
-                }}
-              />
-            ) : imageUrl ? (
-              <Image
-                src={imageUrl}
-                alt={product.name}
-                fill
-                sizes="(max-w-7xl) 33vw, 50vw"
-                className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                onLoad={() => setLoading(false)}
-                onError={() => {
-                  setImageError(true);
-                  setLoading(false);
-                }}
-                priority={false}
-              />
-            ) : null}
-            
-            {loading && (
-              <div className="absolute inset-0 bg-neutral-100 animate-pulse" />
-            )}
-          </>
-        )}
+        <ProductImage
+          product={product}
+          alt={product.name}
+          fill
+          className="transition-transform duration-500 group-hover:scale-105"
+        />
         
         {/* Stock Badges */}
         {isOutOfStock && (

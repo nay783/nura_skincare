@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { ProductImage } from "@/components/product/ProductImage";
 import { Trash2, ShoppingBag, Plus, Minus, ArrowRight, Truck } from "lucide-react";
 import { useCart } from "@/components/cart/cart-context";
 import { formatCurrency } from "@/lib/utils";
@@ -49,12 +49,17 @@ export default function CartPage() {
                 
                 {/* Product Thumbnail */}
                 <div className="relative h-20 w-20 bg-muted rounded-sm overflow-hidden shrink-0 border border-border">
-                  <Image
-                    src={item.image}
+                  <ProductImage
+                    product={{
+                      id: item.id,
+                      name: item.name,
+                      slug: item.slug,
+                      images: [item.image],
+                      main_image_url: item.image,
+                    }}
                     alt={item.name}
                     fill
                     sizes="80px"
-                    className="object-cover"
                   />
                 </div>
 

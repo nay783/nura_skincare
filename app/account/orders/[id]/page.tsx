@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { ChevronLeft, Upload, FileCheck, CheckCircle2, AlertTriangle } from "lucide-react";
+import { ChevronLeft, Upload, FileCheck, CheckCircle2, AlertTriangle, ImageOff } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/shared/button";
+import { ProductImage } from "@/components/product/ProductImage";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -397,8 +398,21 @@ export default function OrderDetailPage({ params }: PageProps) {
                 <div key={item.id} className="py-4 flex gap-4 text-sm justify-between items-center">
                   <div className="flex gap-3 items-center">
                     <div className="relative w-12 h-12 shrink-0 bg-neutral-50 rounded border border-neutral-100 overflow-hidden flex items-center justify-center">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={imgUrl} alt={product?.name || "Produto"} className="object-cover w-full h-full" />
+                      {product ? (
+                        <ProductImage
+                          product={{
+                            id: product.id,
+                            name: product.name,
+                            slug: product.slug,
+                            images: product.images || [],
+                          }}
+                          alt={product.name}
+                          fill
+                          sizes="48px"
+                        />
+                      ) : (
+                        <ImageOff className="h-4 w-4 stroke-[1.2] text-neutral-300" />
+                      )}
                     </div>
                     <div>
                       <p className="font-semibold text-primary leading-tight">{product?.name || "Produto"}</p>

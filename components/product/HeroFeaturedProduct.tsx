@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ImageOff } from "lucide-react";
+import { ProductImage } from "./ProductImage";
 
 interface Product {
   id: string;
@@ -28,11 +29,7 @@ interface HeroFeaturedProductProps {
 
 export function HeroFeaturedProduct({ initialProduct, alternativeProducts }: HeroFeaturedProductProps) {
   const [currentProduct, setCurrentProduct] = useState<Product | null>(initialProduct);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [alternativeIndex, setAlternativeIndex] = useState(0);
-  
-  // Image error state
-  const [imageError, setImageError] = useState(false);
   
   // Animation states
   const [imageVisible, setImageVisible] = useState(false);
@@ -54,31 +51,14 @@ export function HeroFeaturedProduct({ initialProduct, alternativeProducts }: Her
     );
   }
 
-  // Retrieve current image url candidates
-  const allImages = [
-    currentProduct.main_image_url,
-    ...(currentProduct.images || []),
-    ...(currentProduct.external_images || []),
-  ].filter(Boolean) as string[];
-
-  const uniqueImages = Array.from(new Set(allImages));
-  const activeImageUrl = uniqueImages[currentImageIndex] || null;
-
   const handleImageError = () => {
-    // 1. Try next image in current product array
-    if (currentImageIndex + 1 < uniqueImages.length) {
-      setCurrentImageIndex(prev => prev + 1);
-    } 
-    // 2. Try next product in alternative products list
-    else if (alternativeProducts.length > 0 && alternativeIndex < alternativeProducts.length) {
+    // Try next product in alternative products list
+    if (alternativeProducts.length > 0 && alternativeIndex < alternativeProducts.length) {
       const nextAltProduct = alternativeProducts[alternativeIndex];
       setAlternativeIndex(prev => prev + 1);
       setCurrentProduct(nextAltProduct);
-      setCurrentImageIndex(0);
-    } 
-    // 3. Fallback to placeholder image
-    else {
-      setImageError(true);
+    } else {
+      console.warn("All alternative products images failed to load.");
     }
   };
 
@@ -99,24 +79,16 @@ export function HeroFeaturedProduct({ initialProduct, alternativeProducts }: Her
 
       {/* Product Image composition container (60-70% height space) */}
       <div className="flex-1 w-full flex items-center justify-center py-6 relative overflow-hidden">
-        {imageError || !activeImageUrl ? (
-          <div className="flex flex-col items-center justify-center text-center text-muted-foreground">
-            <ImageOff className="h-8 w-8 stroke-[1.2] text-neutral-300 mb-2" />
-            <span className="text-[9px] uppercase tracking-wider font-semibold">Imagem indisponível</span>
-          </div>
-        ) : (
-          <div className="w-full h-full flex items-center justify-center relative">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={activeImageUrl}
-              alt={currentProduct.name}
-              onError={handleImageError}
-              className={`max-h-[220px] max-w-[220px] object-contain select-none transition-all duration-700 ease-out transform ${
-                imageVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
-              } group-hover:scale-[1.01]`}
-            />
-          </div>
-        )}
+        <ProductImage
+          product={currentProduct}
+          alt={currentProduct.name}
+          fill
+          objectFit="contain"
+          className={`max-h-[220px] max-w-[220px] object-contain select-none transition-all duration-700 ease-out transform ${
+            imageVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+          } group-hover:scale-[1.01]`}
+          onError={handleImageError}
+        />
       </div>
 
       {/* Product Info Block (restrained, no divider, whitespace only) */}

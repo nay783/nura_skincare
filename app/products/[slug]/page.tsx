@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ProductDetailActions } from "@/components/product/ProductDetailActions";
 import type { Product } from "@/components/product/ProductCard";
+import { getLocalFallbackProducts } from "@/lib/supabase/fallback";
 import { 
   Sparkles, 
   BookOpen, 
@@ -32,18 +33,31 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       .eq("status", "published")
       .maybeSingle();
 
-    if (!product) return { title: "Produto não encontrado" };
+    const finalProduct = product || getLocalFallbackProducts().find(p => p.slug === slug);
+    if (!finalProduct) return { title: "Produto não encontrado" };
 
     return {
-      title: `${product.brand || "K-Beauty"} ${product.name}`,
-      description: product.seo_description || product.description || `Compre ${product.name} na Nura Skincare.`,
+      title: `${finalProduct.brand || "K-Beauty"} ${finalProduct.name}`,
+      description: finalProduct.seo_description || finalProduct.description || `Compre ${finalProduct.name} na Nura Skincare.`,
       openGraph: {
-        title: product.seo_title || product.name,
-        description: product.seo_description || product.description || "",
-        images: product.images?.[0] ? [{ url: product.images[0] }] : [],
+        title: finalProduct.seo_title || finalProduct.name,
+        description: finalProduct.seo_description || finalProduct.description || "",
+        images: finalProduct.images?.[0] ? [{ url: finalProduct.images[0] }] : [],
       },
     };
   } catch {
+    const localProduct = getLocalFallbackProducts().find(p => p.slug === slug);
+    if (localProduct) {
+      return {
+        title: `${localProduct.brand || "K-Beauty"} ${localProduct.name}`,
+        description: localProduct.description || `Compre ${localProduct.name} na Nura Skincare.`,
+        openGraph: {
+          title: localProduct.name,
+          description: localProduct.description || "",
+          images: localProduct.images?.[0] ? [{ url: localProduct.images[0] }] : [],
+        },
+      };
+    }
     return { title: "Nura Skincare" };
   }
 }
@@ -61,6 +75,21 @@ async function getProductAndRelated(slug: string) {
       .maybeSingle();
 
     if (error || !product) {
+      console.warn("Product slug not found or db failed, trying local fallbacks...");
+      const localProducts = getLocalFallbackProducts();
+      const localProduct = localProducts.find(p => p.slug === slug);
+      if (localProduct) {
+        const localRelated = localProducts
+          .filter(p => p.brand === localProduct.brand && p.id !== localProduct.id)
+          .slice(0, 4);
+        if (localRelated.length < 4) {
+          const remaining = localProducts
+            .filter(p => p.id !== localProduct.id && !localRelated.some(r => r.id === p.id))
+            .slice(0, 4 - localRelated.length);
+          localRelated.push(...remaining);
+        }
+        return { product: localProduct as Product, related: localRelated as Product[] };
+      }
       return { product: null, related: [] };
     }
 
@@ -95,7 +124,21 @@ async function getProductAndRelated(slug: string) {
 
     return { product: product as Product, related };
   } catch (error) {
-    console.error("Failed to load product detail:", error);
+    console.error("Failed to load product detail, loading local fallbacks:", error);
+    const localProducts = getLocalFallbackProducts();
+    const localProduct = localProducts.find(p => p.slug === slug);
+    if (localProduct) {
+      const localRelated = localProducts
+        .filter(p => p.brand === localProduct.brand && p.id !== localProduct.id)
+        .slice(0, 4);
+      if (localRelated.length < 4) {
+        const remaining = localProducts
+          .filter(p => p.id !== localProduct.id && !localRelated.some(r => r.id === p.id))
+          .slice(0, 4 - localRelated.length);
+        localRelated.push(...remaining);
+      }
+      return { product: localProduct as Product, related: localRelated as Product[] };
+    }
     return { product: null, related: [] };
   }
 }

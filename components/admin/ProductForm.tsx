@@ -245,6 +245,8 @@ export default function ProductForm({ initialData, onSubmit, submitLabel }: Prod
       how_to_use: howToUse.trim(),
       benefits,
       images,
+      main_image_url: images[0] || null,
+      external_images: images.filter(img => !img.includes("supabase.co")),
       skin_goals: selectedGoals,
       categoryId, // junction update
       seo_title: seoTitle.trim() || `${name} | Nura Skincare`,

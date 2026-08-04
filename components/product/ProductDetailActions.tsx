@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import { ProductImage } from "./ProductImage";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ShoppingBag, MessageCircle, ArrowRight, HelpCircle, ImageOff } from "lucide-react";
@@ -98,47 +98,13 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
         {/* Left: Image Gallery */}
         <div className="md:col-span-6 space-y-4">
           <div className="relative aspect-square w-full bg-muted rounded-[4px] overflow-hidden border border-border">
-            {showPlaceholder ? (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#FAF9F6] p-4 text-center">
-                <ImageOff className="h-8 w-8 stroke-[1.2] text-neutral-300 mb-2" />
-                <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium">Imagem indisponível</span>
-              </div>
-            ) : (
-              <>
-                {activeImage && activeImage.startsWith("http") ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={activeImage}
-                    alt={product.name}
-                    className="absolute inset-0 h-full w-full object-cover object-center"
-                    referrerPolicy="no-referrer"
-                    onLoad={() => setLoading(false)}
-                    onError={() => {
-                      setImageError(true);
-                      setLoading(false);
-                    }}
-                  />
-                ) : activeImage ? (
-                  <Image
-                    src={activeImage}
-                    alt={product.name}
-                    fill
-                    sizes="(max-w-7xl) 50vw, 100vw"
-                    className="object-cover object-center"
-                    priority
-                    onLoad={() => setLoading(false)}
-                    onError={() => {
-                      setImageError(true);
-                      setLoading(false);
-                    }}
-                  />
-                ) : null}
-                
-                {loading && (
-                  <div className="absolute inset-0 bg-neutral-100 animate-pulse" />
-                )}
-              </>
-            )}
+            <ProductImage
+              product={product}
+              alt={product.name}
+              fill
+              index={activeImageIndex}
+              priority
+            />
           </div>
           {uniqueImageUrls.length > 1 && (
             <div className="flex gap-2.5 overflow-x-auto py-1">
@@ -147,30 +113,17 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
                   key={idx}
                   onClick={() => {
                     setActiveImageIndex(idx);
-                    setImageError(false);
-                    setLoading(true);
                   }}
                   className={`relative shrink-0 w-16 h-16 bg-muted rounded-sm overflow-hidden border ${
                     activeImageIndex === idx ? "border-primary ring-1 ring-primary" : "border-border hover:border-primary/50"
                   }`}
                 >
-                  {img.startsWith("http") ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={img}
-                      alt={`${product.name} - Imagem ${idx + 1}`}
-                      className="absolute inset-0 h-full w-full object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                  ) : (
-                    <Image
-                      src={img}
-                      alt={`${product.name} - Imagem ${idx + 1}`}
-                      fill
-                      sizes="64px"
-                      className="object-cover"
-                    />
-                  )}
+                  <ProductImage
+                    product={product}
+                    alt={`${product.name} - Imagem ${idx + 1}`}
+                    fill
+                    index={idx}
+                  />
                 </button>
               ))}
             </div>
@@ -314,12 +267,12 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
                 className="group relative flex flex-col border border-border p-3 rounded-sm bg-white hover:border-primary/30 transition-all"
               >
                 <Link href={`/products/${viewed.slug}`} className="relative aspect-square w-full overflow-hidden bg-muted mb-3 rounded-sm">
-                  <Image
-                    src={viewed.images?.[0] || "/images/placeholder-product.jpg"}
+                  <ProductImage
+                    product={viewed}
                     alt={viewed.name}
                     fill
                     sizes="120px"
-                    className="object-cover group-hover:scale-103 transition-all duration-300"
+                    className="group-hover:scale-103 transition-all duration-300"
                   />
                 </Link>
                 <span className="text-[9px] uppercase tracking-widest text-muted-foreground font-semibold">

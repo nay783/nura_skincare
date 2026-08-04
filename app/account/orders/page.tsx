@@ -4,8 +4,9 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ShoppingBag, ChevronRight } from "lucide-react";
+import { ShoppingBag, ChevronRight, ImageOff } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { ProductImage } from "@/components/product/ProductImage";
 
 interface OrderProduct {
   id: string;
@@ -138,12 +139,21 @@ export default function OrdersPage() {
                 <div className="p-5 flex gap-4 items-start flex-1">
                   {/* Item Image Thumbnail */}
                   <div className="relative w-16 h-16 shrink-0 bg-neutral-50 rounded-sm border border-neutral-100 overflow-hidden flex items-center justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={firstItemImage}
-                      alt={firstItemProduct?.name || "Encomenda"}
-                      className="object-cover w-full h-full"
-                    />
+                    {firstItemProduct ? (
+                      <ProductImage
+                        product={{
+                          id: firstItemProduct.id,
+                          name: firstItemProduct.name,
+                          slug: "", // slug is not in OrderProduct interface but ProductImage requires it. We can map or set it to empty
+                          images: firstItemProduct.images || [],
+                        }}
+                        alt={firstItemProduct.name}
+                        fill
+                        sizes="64px"
+                      />
+                    ) : (
+                      <ImageOff className="h-4 w-4 stroke-[1.2] text-neutral-300" />
+                    )}
                   </div>
 
                   <div className="space-y-1">

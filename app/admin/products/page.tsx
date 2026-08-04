@@ -12,6 +12,7 @@ import { Button } from "@/components/shared/button";
 import { Input } from "@/components/shared/input";
 import { formatCurrency } from "@/lib/utils";
 import { importProductsAction, updateProductStatusAction, deleteProductAction } from "./actions";
+import { ProductImage } from "@/components/product/ProductImage";
 
 const STATUS_LABELS: Record<string, string> = {
   draft: "Rascunho",
@@ -103,7 +104,10 @@ export default function AdminProductsPage() {
     } else if (activeTab === "low_stock") {
       result = result.filter(p => p.stock_quantity <= 5 && p.status === "published");
     } else if (activeTab === "no_image") {
-      result = result.filter(p => !p.images || p.images.length === 0 || p.images[0] === "");
+      result = result.filter(p => 
+        (!p.main_image_url || p.main_image_url === "") &&
+        (!p.images || p.images.length === 0 || p.images[0] === "")
+      );
     } else if (activeTab === "imported") {
       result = result.filter(p => p.source_import === "instagram" || p.source_import === "csv");
     }
@@ -288,25 +292,35 @@ export default function AdminProductsPage() {
                   <th className="p-4 text-right">Preço</th>
                   <th className="p-4 text-center">Stock</th>
                   <th className="p-4">Estado</th>
+                  <th className="p-4">Imagem Estado</th>
                   <th className="p-4">Origem</th>
                   <th className="p-4 text-right">Acções</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100 text-xs">
                 {filteredProducts.map(product => {
-                  const hasImage = product.images && product.images.length > 0 && product.images[0] !== "";
-                  const thumb = hasImage ? product.images[0] : null;
+                  const hasSupabaseImage = product.main_image_url && product.main_image_url.includes("supabase.co");
+                  const hasExternalImage = product.main_image_url && !product.main_image_url.includes("supabase.co") && product.main_image_url.startsWith("http");
+                  const hasAnyImage = hasSupabaseImage || hasExternalImage || (product.images && product.images.length > 0 && product.images[0] !== "");
+                  
+                  let imageStatus = "sem_imagem";
+                  if (hasSupabaseImage) {
+                    imageStatus = "disponivel";
+                  } else if (hasExternalImage || hasAnyImage) {
+                    imageStatus = "externa";
+                  }
                   
                   return (
                     <tr key={product.id} className="hover:bg-neutral-50/50">
                       {/* Image Thumbnail */}
                       <td className="p-4">
-                        <div className="h-10 w-10 bg-neutral-100 border border-border rounded-sm overflow-hidden flex items-center justify-center text-neutral-400">
-                          {thumb ? (
-                            <img src={thumb} alt={product.name} className="h-full w-full object-cover" />
-                          ) : (
-                            <ShoppingBag className="h-4 w-4" />
-                          )}
+                        <div className="relative h-10 w-10 bg-neutral-100 border border-border rounded-sm overflow-hidden flex items-center justify-center text-neutral-400">
+                          <ProductImage
+                            product={product}
+                            alt={product.name}
+                            fill
+                            sizes="40px"
+                          />
                         </div>
                       </td>
 
@@ -341,6 +355,23 @@ export default function AdminProductsPage() {
                             : "bg-amber-50 text-amber-700 border border-amber-200/50"
                         }`}>
                           {STATUS_LABELS[product.status] || product.status}
+                        </span>
+                      </td>
+
+                      {/* Image Status Badge */}
+                      <td className="p-4">
+                        <span className={`inline-block text-[9px] font-bold uppercase px-2 py-0.5 rounded-sm ${
+                          imageStatus === "disponivel"
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200/50"
+                            : imageStatus === "externa"
+                            ? "bg-amber-50 text-amber-700 border border-amber-200/50"
+                            : "bg-red-50 text-red-700 border border-red-200/50"
+                        }`}>
+                          {imageStatus === "disponivel"
+                            ? "Imagem disponível"
+                            : imageStatus === "externa"
+                            ? "Imagem externa"
+                            : "Sem imagem"}
                         </span>
                       </td>
 
