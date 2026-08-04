@@ -83,9 +83,9 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group relative flex flex-col bg-card border border-border overflow-hidden transition-all duration-300 hover:border-primary/30 max-w-sm rounded-[4px] h-full">
+    <div className="group relative flex flex-col bg-white overflow-hidden transition-all duration-500 hover:shadow-md max-w-sm rounded-md h-full border border-border/30">
       {/* Product Image Link */}
-      <Link href={`/products/${product.slug}`} className="relative block aspect-square w-full overflow-hidden bg-muted">
+      <Link href={`/products/${product.slug}`} className="relative block aspect-square w-full overflow-hidden bg-muted rounded-t-md">
         <ProductImage
           product={product}
           alt={product.name}
@@ -95,12 +95,12 @@ export function ProductCard({ product }: ProductCardProps) {
         
         {/* Stock Badges */}
         {isOutOfStock && (
-          <div className="absolute top-2 right-2 bg-neutral-900/90 text-white text-[10px] uppercase font-semibold px-2 py-0.5 tracking-wider rounded-sm">
+          <div className="absolute top-2 right-2 bg-neutral-900/90 text-white text-[9px] uppercase font-bold px-2 py-0.5 tracking-wider rounded-sm">
             Esgotado
           </div>
         )}
         {!isOutOfStock && isLowStock && (
-          <div className="absolute top-2 right-2 bg-accent/90 text-primary-foreground text-[10px] uppercase font-semibold px-2 py-0.5 tracking-wider rounded-sm">
+          <div className="absolute top-2 right-2 bg-accent/90 text-primary-foreground text-[9px] uppercase font-bold px-2 py-0.5 tracking-wider rounded-sm">
             Poucas unidades
           </div>
         )}
@@ -108,16 +108,12 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Info Section */}
       <div className="flex flex-col flex-1 p-5 space-y-2">
-        <div className="flex items-center justify-between text-xs text-muted-foreground font-medium uppercase tracking-wider">
+        <div className="flex items-center justify-between text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
           <span>{product.brand || "K-Beauty"}</span>
-          {/* Dynamic Category Tag */}
-          {product.hashtags?.[0] && (
-            <span className="text-[10px] text-secondary lowercase">#{product.hashtags[0]}</span>
-          )}
         </div>
 
         <Link href={`/products/${product.slug}`} className="block">
-          <h3 className="font-serif text-lg font-medium text-primary group-hover:text-secondary transition-colors line-clamp-1">
+          <h3 className="font-sans text-sm font-semibold tracking-tight text-primary group-hover:text-accent transition-colors line-clamp-1">
             {product.name}
           </h3>
         </Link>
@@ -130,44 +126,36 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <div className="flex-1 flex flex-col justify-end pt-4 space-y-3">
           <div className="flex items-baseline gap-2">
-            <span className="text-base font-semibold text-primary">
+            <span className="text-sm font-bold text-primary">
               {formatCurrency(product.price)}
             </span>
             {product.compare_at_price && product.compare_at_price > product.price && (
-              <span className="text-xs line-through text-muted-foreground">
+              <span className="text-xs line-through text-muted-foreground/75">
                 {formatCurrency(product.compare_at_price)}
               </span>
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-2 pt-1">
+          <div className="pt-1">
             {isOutOfStock ? (
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="col-span-2 text-center inline-flex items-center justify-center gap-1.5 h-10 border border-primary text-xs font-semibold text-primary hover:bg-primary hover:text-white transition-all uppercase tracking-wider rounded-sm"
+                className="w-full text-center inline-flex items-center justify-center gap-1.5 h-10 border border-primary text-[10px] font-bold text-primary hover:bg-primary hover:text-white transition-all uppercase tracking-wider rounded-sm font-sans"
               >
                 <MessageCircle className="h-3.5 w-3.5" />
                 Avisar-me
               </a>
             ) : (
-              <>
-                <Button
-                  onClick={handleAddToCart}
-                  variant="primary"
-                  className="w-full h-10 flex items-center justify-center gap-1.5 rounded-sm !text-xs px-0"
-                >
-                  <ShoppingBag className="h-3.5 w-3.5" />
-                  Comprar
-                </Button>
-                <Link
-                  href={`/products/${product.slug}`}
-                  className="w-full text-center inline-flex items-center justify-center h-10 border border-border text-xs font-semibold text-primary hover:border-primary transition-all uppercase tracking-wider rounded-sm bg-transparent"
-                >
-                  Ver detalhes
-                </Link>
-              </>
+              <Button
+                onClick={handleAddToCart}
+                variant="primary"
+                className="w-full h-10 flex items-center justify-center gap-1.5 rounded-sm text-[10px] font-bold uppercase tracking-wider font-sans"
+              >
+                <ShoppingBag className="h-3.5 w-3.5" />
+                Comprar
+              </Button>
             )}
           </div>
         </div>

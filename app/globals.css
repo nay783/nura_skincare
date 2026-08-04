@@ -2,26 +2,27 @@
 
 :root {
   /* Core Theme Colors */
-  --background: #FAF9F6;      /* Warm White */
-  --foreground: #1C1C1C;      /* Near Black */
+  --background: #F7F3EC;      /* Warm Ivory */
+  --foreground: #242722;      /* Charcoal */
   --card: #FFFFFF;            /* Pure White */
-  --card-foreground: #1C1C1C;
-  --primary: #1B3B2B;         /* Deep Forest Green */
-  --primary-foreground: #FAF9F6;
-  --secondary: #556B2F;       /* Muted Olive */
-  --secondary-foreground: #FAF9F6;
-  --accent: #D4AF37;          /* Warm Gold */
-  --accent-foreground: #1C1C1C;
-  --muted: #F0EDE6;           /* Warm Light Gray */
+  --card-foreground: #242722;
+  --primary: #173E32;         /* Deep Forest Green */
+  --primary-foreground: #F7F3EC;
+  --secondary: #A7B29F;       /* Muted Sage */
+  --secondary-foreground: #242722;
+  --accent: #C49A5A;          /* Champagne Gold */
+  --accent-foreground: #242722;
+  --muted: #E9E3D7;           /* Soft Stone */
   --muted-foreground: #707070;/* Neutral Gray */
-  --border: #E6E2D8;          /* Light warm border */
-  --input: #E6E2D8;
-  --ring: #1B3B2B;
+  --border: #E9E3D7;          /* Soft Stone Border */
+  --input: #E9E3D7;
+  --ring: #173E32;
+  --soft-blush: #D9C8BE;      /* Soft Blush */
 
   /* Custom Animations and UI Constraints */
-  --radius-lg: 8px;
-  --radius-md: 6px;
-  --radius-sm: 4px;
+  --radius-lg: 18px;          /* Softer major rounded corners */
+  --radius-md: 12px;          /* Product card rounded corners */
+  --radius-sm: 8px;           /* Inputs and buttons rounded corners */
 }
 
 @theme {
@@ -40,13 +41,14 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-soft-blush: var(--soft-blush);
 
   --font-sans: var(--font-sans), system-ui, -apple-system, sans-serif;
   --font-serif: var(--font-serif), Georgia, serif;
 
-  --radius-lg: 8px;
-  --radius-md: 6px;
-  --radius-sm: 4px;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
 }
 
 /* Custom Base Styles */

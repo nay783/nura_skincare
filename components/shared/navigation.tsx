@@ -41,31 +41,31 @@ export function Header() {
           <nav className="hidden lg:flex space-x-8">
             <Link
               href="/products"
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className="relative py-1 text-xs font-bold uppercase tracking-widest text-primary hover:text-accent transition-all after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 after:bg-accent after:transition-all hover:after:w-full"
             >
               Loja
             </Link>
             <Link
               href="/#skin-goals"
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className="relative py-1 text-xs font-bold uppercase tracking-widest text-primary hover:text-accent transition-all after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 after:bg-accent after:transition-all hover:after:w-full"
             >
               Objectivos da Pele
             </Link>
             <Link
               href="/products?brand=true"
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className="relative py-1 text-xs font-bold uppercase tracking-widest text-primary hover:text-accent transition-all after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 after:bg-accent after:transition-all hover:after:w-full"
             >
               Marcas
             </Link>
             <Link
               href="/blog"
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className="relative py-1 text-xs font-bold uppercase tracking-widest text-primary hover:text-accent transition-all after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 after:bg-accent after:transition-all hover:after:w-full"
             >
               Blog
             </Link>
             <Link
               href="/#delivery-info"
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className="relative py-1 text-xs font-bold uppercase tracking-widest text-primary hover:text-accent transition-all after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 after:bg-accent after:transition-all hover:after:w-full"
             >
               Entregas
             </Link>
@@ -75,26 +75,26 @@ export function Header() {
           <div className="hidden lg:flex items-center space-x-5">
             <Link
               href="/products?search=open"
-              className="text-foreground hover:text-primary transition-colors p-1"
+              className="text-primary hover:text-accent transition-colors p-1"
               aria-label="Pesquisar produtos"
             >
-              <Search className="h-5 w-5 stroke-[1.5]" />
+              <Search className="h-4.5 w-4.5 stroke-[1.5]" />
             </Link>
             <Link
               href="/account"
-              className="text-foreground hover:text-primary transition-colors p-1"
+              className="text-primary hover:text-accent transition-colors p-1"
               aria-label="A minha conta"
             >
-              <User className="h-5 w-5 stroke-[1.5]" />
+              <User className="h-4.5 w-4.5 stroke-[1.5]" />
             </Link>
             <Link
               href="/cart"
-              className="text-foreground hover:text-primary transition-colors p-1 relative"
+              className="text-primary hover:text-accent transition-colors p-1 relative"
               aria-label="Carrinho de compras"
             >
-              <ShoppingBag className="h-5 w-5 stroke-[1.5]" />
+              <ShoppingBag className="h-4.5 w-4.5 stroke-[1.5]" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-semibold text-white">
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[8px] font-bold text-white leading-none">
                   {cartCount}
                 </span>
               )}
@@ -103,10 +103,10 @@ export function Header() {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 border border-primary text-xs font-semibold text-primary hover:bg-primary hover:text-white transition-all rounded-sm uppercase tracking-wider"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-border hover:border-primary/30 text-[10px] font-bold text-primary hover:text-accent transition-all rounded-sm uppercase tracking-widest bg-transparent"
             >
-              <MessageCircle className="h-4 w-4" />
-              Falar no WhatsApp
+              <MessageCircle className="h-3.5 w-3.5 text-primary" />
+              WhatsApp
             </a>
           </div>
 
